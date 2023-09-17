@@ -1,3 +1,5 @@
+import sys
+
 # Store the questions in a dictionary
 questions = {
     'q01': 'Are you currently experiencing any pain?',
@@ -22,6 +24,16 @@ def ask_question(question):
         else:
             print("Please answer 'yes' or 'no'.")
 
+def check_pain_location(location_question, followup_question, diagnosis_message):
+    location_response = ask_question(location_question)
+    if location_response == 'yes':
+        followup_response = ask_question(followup_question)
+        if followup_response == 'yes':
+            print(diagnosis_message)
+            sys.exit()
+        else:
+            print("Sorry, we can't help you right now.")
+
 def main():
     print("Where does it hurt? Please answer yes or no to each of these questions.")
     
@@ -30,48 +42,10 @@ def main():
     if ans0 == 'yes':
         ans1 = ask_question(questions['q11'])
         if ans1 == 'yes':
-            b = 0
-            for i in range(21, 25):
-                ans = ask_question(questions[f'q{i}'])
-                if ans == 'yes':
-                    break
-                b += 1
-                if b == 4:
-                    print("Sorry, we can't help you right now.")
-                    break
-            if b < 4:
-                if ans == 'yes':
-                    ans3 = ask_question(questions['q31'])
-                    if ans3 == 'yes':
-                        print("You may have a headache. Please consult a neurologist.")
-                    else:
-                        print("Sorry, we can't help you right now.")
-                elif ans == 'no':
-                    ans = ask_question(questions['q22'])
-                    if ans == 'yes':
-                        ans3 = ask_question(questions['q32'])
-                        if ans3 == 'yes':
-                            print("You may have heartburn. Please consult a doctor.")
-                        else:
-                            print("Sorry, we can't help you right now.")
-                    elif ans == 'no':
-                        ans = ask_question(questions['q23'])
-                        if ans == 'yes':
-                            ans3 = ask_question(questions['q33'])
-                            if ans3 == 'yes':
-                                print("You may have a GI infection. Please consult a surgeon and get your stomach pumped!")
-                            else:
-                                print("Sorry, we can't help you right now.")
-                        elif ans == 'no':
-                            ans = ask_question(questions['q24'])
-                            if ans == 'yes':
-                                ans3 = ask_question(questions['q34'])
-                                if ans3 == 'yes':
-                                    print("You may have arthritis. Please consult a doctor.")
-                                else:
-                                    print("Sorry, we can't help you right now.")
-                            else:
-                                print("Sorry, we can't help you right now.")
+            check_pain_location(questions['q21'], questions['q31'], "You may have a headache. Please consult a neurologist.")
+            check_pain_location(questions['q22'], questions['q32'], "You may have heartburn. Please consult a doctor.")
+            check_pain_location(questions['q23'], questions['q33'], "You may have a GI infection. Please consult a surgeon and get your stomach checked!")
+            check_pain_location(questions['q24'], questions['q34'], "You may have arthritis. Please consult a doctor.")
         else:
             print("Sorry, we can't help you right now.")
     else:
